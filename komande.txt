@@ -1,0 +1,7 @@
+chcp 65001 //utf8 da moze da stampa strelice
+
+bison -d parser.y
+flex lexer.l
+gcc -std=c99 lex.yy.c parser.tab.c ast.c main.c -o parser.exe
+
+parser.exe input.txt

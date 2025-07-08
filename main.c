@@ -1,13 +1,14 @@
+#include "ast.h"
+#include "errors.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "ast.h"
 
 extern int yyparse();
 extern ASTNode *root;
 extern FILE *yyin;
-
+extern int syntax_error;
 #define COLOR_RESET   "\033[0m"
-#define COLOR_ID      "\033[32m"  
+#define ZELENA     "\033[32m"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -17,18 +18,18 @@ int main(int argc, char **argv) {
 
     yyin = fopen(argv[1], "r");
     if (!yyin) {
-        perror("Error opening input file");
+        perror("Greska prilikom otvaranja fajla");
         return 1;
     }
 
-    if (yyparse() == 0) {
-        printf(COLOR_ID"AST:"COLOR_RESET"\n");
+    if (yyparse() == 0 && !syntax_error) {
+        printf(ZELENA"\nAST:\n"COLOR_RESET);
         int levels[100] = {0};
         printAST(root, 0, 1, levels);
     } else {
-        fprintf(stderr, "Parsing failed!\n");
+        fprintf(stderr, "\nGreska u parsiranju \n");
     }
-    
+
     freeAST(root);
     fclose(yyin);
     return 0;

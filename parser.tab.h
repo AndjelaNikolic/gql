@@ -53,24 +53,25 @@
      SET_UNION = 269,
      SET_DIFFERENCE = 270,
      SET_INTERSECTION = 271,
-     PLUS = 272,
-     MINUS = 273,
-     MULT = 274,
-     OR = 275,
-     LT = 276,
-     GT = 277,
-     LBRACKET = 278,
-     RBRACKET = 279,
-     LPAREN = 280,
-     RPAREN = 281,
-     COMMA = 282,
-     SEMICOLON = 283,
-     COLON = 284,
-     EQUALS = 285,
-     MINUS_EQ = 286,
-     ID = 287,
-     STRING = 288,
-     UMINUS = 289
+     POW = 272,
+     PLUS = 273,
+     MINUS = 274,
+     MULT = 275,
+     OR = 276,
+     LT = 277,
+     GT = 278,
+     LBRACKET = 279,
+     RBRACKET = 280,
+     LPAREN = 281,
+     RPAREN = 282,
+     COMMA = 283,
+     SEMICOLON = 284,
+     COLON = 285,
+     EQUALS = 286,
+     MINUS_EQ = 287,
+     ID = 288,
+     STRING = 289,
+     UMINUS = 290
    };
 #endif
 
@@ -81,7 +82,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 26 "parser.y"
+#line 19 "parser.y"
 
     char *str;
     struct ASTNode *ast;
@@ -89,7 +90,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 93 "parser.tab.h"
+#line 94 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

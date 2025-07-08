@@ -1,0 +1,13 @@
+QUERY search1 = <apple ^^ banana>;
+QUERY search2 = <orange ^^ (peach | pear)>;
+QUERY search3 = <(kiwi ^^ mango) ^^ pineapple>;
+
+RESULT_OF_QUERY result1;
+
+EXEC search1;
+EXEC search2;
+EXEC search3;
+
+result1 -= EXEC search1;
+result1 = result1 ++ search2;
+result1 = result1 ** search3;

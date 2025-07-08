@@ -1,0 +1,21 @@
+
+QUERY fruits = <apple banana orange>;
+QUERY people = <name:john name:mary + name:paul>;
+
+QUERY list1 = [<apple>, <banana>, fruits];
+QUERY list2 = [people, <cherry>];
+
+
+RESULT_OF_QUERY results;
+
+IF NOT_EMPTY(fruits) BEGIN
+    EXEC fruits;
+    results -= EXEC list1;
+END
+
+FOR item IN list2 BEGIN
+    EXEC item;
+END
+
+results = fruits ++ list1;
+results = results ** list2;

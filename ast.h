@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "errors.h"
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
-char *strdup(const char *s);
-#endif
+typedef struct {
+    int line;
+    int column;
+} SourceLocation;
 
 typedef enum {
     PROGRAM_NODE,
@@ -28,8 +30,7 @@ typedef enum {
     UNARY_OP_NODE,
     BINARY_OP_NODE,
     CONDITION_NODE,
-    QUERY_LIST_NODE,
-    QUERY_REF_NODE
+    QUERY_LIST_NODE
 } ASTNodeType;
 
 typedef enum {
@@ -37,6 +38,7 @@ typedef enum {
     MINUS_OP,
     MULT_OP,
     OR_OP,
+    POW_OP,
     JUXTAPOSITION_OP,
     SET_UNION_OP,
     SET_DIFFERENCE_OP,
@@ -51,7 +53,9 @@ typedef enum {
 
 typedef struct ASTNode {
     ASTNodeType type;
+    SourceLocation location;
     struct ASTNode *next;
+    
     union {
         struct {
             struct ASTNode *declarations;
@@ -145,38 +149,34 @@ typedef struct ASTNode {
             struct ASTNode *query_item;
             struct ASTNode *more_queries;
         } query_list;
-        
-        struct {
-            char *query_ref;
-        } query_ref;
     };
 } ASTNode;
 
-ASTNode *createProgramNode(ASTNode *declarations, ASTNode *commands);
-ASTNode *createDeclarationsNode(ASTNode *declaration, ASTNode *more_decls);
-ASTNode *createQueryDeclarationNode(char *name, ASTNode *query);
-ASTNode *createQueryListDeclarationNode(char *name, ASTNode *query_list);
-ASTNode *createResultOfQueryNode(char *name);
-ASTNode *createCommandsNode(ASTNode *command, ASTNode *more_cmds);
-ASTNode *createExecCommandNode(char *query_name);
-ASTNode *createIfCommandNode(ASTNode *condition, ASTNode *commands);
-ASTNode *createForCommandNode(char *iterator, ASTNode *query_list, ASTNode *commands);
-ASTNode *createAssignCommandNode(char *target, char *source);
-ASTNode *createSetOperationNode(char *left, char *right, OperatorType op, char *target);
-ASTNode *createQueryNode(ASTNode *terms);
-ASTNode *createTermsNode(ASTNode *term, ASTNode *more_terms);
-ASTNode *createTermNode(char *word, ASTNode *directive, ASTNode *op_term);
-ASTNode *createDirectiveNode(char *key, char *value);
-ASTNode *createUnaryOpNode(OperatorType op, ASTNode *term);
-ASTNode *createBinaryOpNode(OperatorType op, ASTNode *left, ASTNode *right);
-ASTNode *createEmptyConditionNode(char *id);
-ASTNode *createUrlExistsConditionNode(char *id, char *url);
-ASTNode *createNotEmptyConditionNode(char *id);
-ASTNode *createQueryListNode(ASTNode *query, ASTNode *more_queries);
-ASTNode *createIDReferenceQueryNode(char *name);
-ASTNode *createQueryRefNode(char *name);
+ASTNode *createProgramNode(ASTNode *declarations, ASTNode *commands, SourceLocation loc);
+ASTNode *createDeclarationsNode(ASTNode *declaration, ASTNode *more_decls, SourceLocation loc);
+ASTNode *createQueryDeclarationNode(char *name, ASTNode *query, SourceLocation loc);
+ASTNode *createQueryListDeclarationNode(char *name, ASTNode *query_list, SourceLocation loc);
+ASTNode *createResultOfQueryNode(char *name, SourceLocation loc);
+ASTNode *createCommandsNode(ASTNode *command, ASTNode *more_cmds, SourceLocation loc);
+ASTNode *createExecCommandNode(char *query_name, SourceLocation loc);
+ASTNode *createIfCommandNode(ASTNode *condition, ASTNode *commands, SourceLocation loc);
+ASTNode *createForCommandNode(char *iterator, ASTNode *query_list, ASTNode *commands, SourceLocation loc);
+ASTNode *createAssignCommandNode(char *target, char *source, SourceLocation loc);
+ASTNode *createSetOperationNode(char *left, char *right, OperatorType op, char *target, SourceLocation loc);
+ASTNode *createQueryNode(ASTNode *terms, SourceLocation loc);
+ASTNode *createTermsNode(ASTNode *term, ASTNode *more_terms, SourceLocation loc);
+ASTNode *createTermNode(char *word, ASTNode *directive, ASTNode *op_term, SourceLocation loc);
+ASTNode *createDirectiveNode(char *key, char *value, SourceLocation loc);
+ASTNode *createUnaryOpNode(OperatorType op, ASTNode *term, SourceLocation loc);
+ASTNode *createBinaryOpNode(OperatorType op, ASTNode *left, ASTNode *right, SourceLocation loc);
+ASTNode *createEmptyConditionNode(char *id, SourceLocation loc);
+ASTNode *createUrlExistsConditionNode(char *id, char *url, SourceLocation loc);
+ASTNode *createNotEmptyConditionNode(char *id, SourceLocation loc);
+ASTNode *createQueryListNode(ASTNode *query, ASTNode *more_queries, SourceLocation loc);
+ASTNode *createIDReferenceQueryNode(char *name, SourceLocation loc);
 
 void printAST(ASTNode *node, int level, int isLast, int *levels);
 void freeAST(ASTNode *node);
+char *my_strdup(const char *s);
 
 #endif
